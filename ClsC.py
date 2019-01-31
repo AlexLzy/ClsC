@@ -26,13 +26,33 @@ class ClsC():
             sys.exit(1)
 
     def parsed(self):
-        '''这个方法与list的sorted()有相似之处，调用它会直接返回处理过的对象，而
-        不是处理对象。
-
-        返回（parsedfile,title, author, var)格式的的一个tuple，
-        其中 parsedfile指由每一短句组成的List，不包含备考字
-        var指（一般穿插在古文中）的备考字。
         '''
+        ClsC.parsed() - 初步分析并返回古文的一些信息
+
+        USAGE:
+            ClsC.repeatch()
+
+        CATEGORY:
+            古文处理
+
+        DESCRIPTION:  #XXX：如何较为标准地描述返回的tuple的结构？
+            返回一个由古文的基础信息组成的tuple，其结构为
+
+            (parsedfile, title, author, var):
+                parsedfile:
+                    由古文中每一个短句（由标点符号分割）组成的list
+                    包含作者和朝代
+
+                title:
+                    古文的标题（截取第一个短句）
+
+                author:
+                    作者（和朝代）
+
+                var:
+                    古文中的备考字
+        '''
+
         rule = re.compile(u'[^\u4e00-\u9fa5]+')
         f = re.sub('[0-9]', '', self.ClsC_file)
         var = re.findall('[({[].*?一作.*?[)}]', self.ClsC_file)
@@ -43,19 +63,36 @@ class ClsC():
         return (parsedfile, title, author, var)
 
     def repeatch(self, arg=''):
-        # TODO: 添加__doc__
+        '''
+        ClsC.repeatch() - 处理古文中的重复字
+
+        USAGE:
+            ClsC.repeatch(arg='')
+
+        CATEGORY:
+            古文处理
+
+        DESCRIPTION:
+            处理古文中的重复字
+
+            -l, --log
+                将结果输出到repeatch.txt中
+
+            -v, --verbose
+                啰嗦模式，生成对重复字的归纳
+        '''
         # TODO: 可以试着将作者和朝代都直接排除掉
         # XXX:
         # 这里排除冗余结果是用在内部直接排除作者和朝代还是
         # 通过禁用字功能排除还有待商榷。
         try:
-            if '-l' in arg:
+            if '-l' or '--log' in arg:
                 sys.stdout = open('repeatch.txt', 'w')
                 # 将结果写入文件,文件名为repeatch.txt且只能在代码内部更改。
             for e in set(''.join(self.parsed()[0])):  # e是古文中的每'一个字'
                 if ''.join(self.parsed()[0]).count(e) == 1:
                     continue  # 如果只出现一次就跳过
-                if '-v' in arg:  # 唠叨模式，其实可以用来做归纳
+                if '-v' or '--verbose' in arg:  # 唠叨模式，其实可以用来做归纳
                     sys.stdout.write("重复的字："+c+"\n==================\n")
                     for s in self.parsed()[0]:  # s指古文中的每一个短句
                         if e in s:
