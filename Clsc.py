@@ -15,7 +15,7 @@ class Clsc():
         except FileNotFoundError:
             self.__terminal__.write("没有找到conf.txt。\n")
         try:
-            with open('Clsc.txt', "r") as f:
+            with open('ClsC.txt', "r") as f:
                 self.clsc_file = f.readlines
         except FileNotFoundError:
             self.__terminal__.write("没有找到需要分析的古诗文。\n \
